@@ -1,0 +1,30 @@
+id: 16697102-355e-4cea-b13e-4dae1b68a52c
+name: SQL stored procedure creation or altering
+description: |
+  'This query will detect creation or altering of SQL stored procedures.'
+requiredDataConnectors:
+  - connectorId: WAF
+    dataTypes:
+      - AzureDiagnostics
+queryFrequency: 1d
+queryPeriod: 1d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - Persistence
+relevantTechniques:
+  - T1505
+tags:
+  - SQL
+query: |
+  let timePeriod = 1d;
+  AzureDiagnostics 
+  | where TimeGenerated > ago(timePeriod)
+  | where Category == 'SQLSecurityAuditEvents' and isnotempty(statement_s) 
+  | project TimeGenerated, PrincipalName = server_principal_name_s, ClientIp = client_ip_s, HostName = host_name_s,
+            ApplicationName = application_name_s, ActionName = action_name_s, Database = strcat(LogicalServerName_s, '/', database_name_s),
+            IsSuccess = succeeded_s, AffectedRows = affected_rows_d, ResponseRows = response_rows_d, Statement = toupper(statement_s)
+  | extend CreationOrAlteringSP = indexof_regex(Statement, @"[CREATE|ALTER]\s+PROCEDURE")
+  | where CreationOrAlteringSP != -1
+  | sort by IsSuccess desc
+  | project TimeGenerated, Database, IsSuccess, Statement, PrincipalName, ClientIp, HostName, ApplicationName, ActionName, ResponseRows, AffectedRows
