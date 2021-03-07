@@ -1,0 +1,27 @@
+id: 9ae77a64-7682-4bda-b3d4-1518754a4d8b
+name: SQL Auditing Disabled
+description: |
+  'This query will detect disabling SQL auditing.'
+requiredDataConnectors:
+  - connectorId: WAF
+    dataTypes:
+      - AzureDiagnostics
+queryFrequency: 1d
+queryPeriod: 1d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - Defense Evasion
+relevantTechniques:
+  - T1562
+tags:
+  - SQL
+query: |
+  let timePeriod = 1d;
+  AzureDiagnostics 
+  | where TimeGenerated > ago(timePeriod)
+  | where Category == 'SQLSecurityAuditEvents'
+  | where succeeded_s == 'true'
+  | where action_name_s == 'AUDIT SESSION CHANGED'
+  | extend Action = parse_json(parse_xml(additional_information_s)).action_info.action
+  | where Action == "event disabled"
