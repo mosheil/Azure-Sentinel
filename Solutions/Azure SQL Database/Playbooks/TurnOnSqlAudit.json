@@ -2,8 +2,8 @@
 	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
 	"contentVersion": "1.0.0.0",
 	"metadata": {
-		"comments": "This playbook will disable the user in Azure Active Directoy and add a comment to the incident",
-		"author": "Nicholas DiCola"
+		"comments": "This playbook turns on audit for an Azure SQL database on which an alert had been fired",
+		"author": "Hani Neuvirth"
 	},
 	"parameters": {
 		"PlaybookName": {
