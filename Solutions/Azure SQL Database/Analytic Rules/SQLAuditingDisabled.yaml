@@ -3,7 +3,7 @@ name: SQL Auditing Disabled
 description: |
   'This query will detect disabling SQL auditing.'
 requiredDataConnectors:
-  - connectorId: WAF
+  - connectorId: AzureSql
     dataTypes:
       - AzureDiagnostics
 queryFrequency: 1d
