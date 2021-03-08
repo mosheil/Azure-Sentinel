@@ -4,7 +4,7 @@ description: |
   'This query batches of distinct SQL queries that failed with error codes that might indicate malicious attempts to gain illegitimate access to the data. When blind type of attacks are performed (such as SQL injection of fuzzying), the attempted queries are often malformed and fail on wrong syntax (error 102) or wrong escaping (error 105). Thus, if a large number of different queries fail on such errors in a short amount of time, this might indicate attempted attack.'
 severity: Medium
 requiredDataConnectors:
-  - connectorId: WAF
+  - connectorId: AzureSql
     dataTypes:
       - AzureDiagnostics
 queryFrequency: 1d
@@ -12,9 +12,9 @@ queryPeriod: 1d
 triggerOperator: gt
 triggerThreshold: 0
 tactics:
-  - ###TBD
+  - TA0001 (Initial Access)
 relevantTechniques:
-  - ###TBD### T1537 (Transfer Data to Cloud Account?)
+  - T1190 (Exploit Public-Facing Application)
 tags:
   - SQL
 query: |
