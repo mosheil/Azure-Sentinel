@@ -3,13 +3,9 @@ name: SQL stored procedure creation or altering
 description: |
   'This query will detect creation or altering of SQL stored procedures.'
 requiredDataConnectors:
-  - connectorId: WAF
+  - connectorId: AzureSql
     dataTypes:
       - AzureDiagnostics
-queryFrequency: 1d
-queryPeriod: 1d
-triggerOperator: gt
-triggerThreshold: 0
 tactics:
   - Persistence
 relevantTechniques:

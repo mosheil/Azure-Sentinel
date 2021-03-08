@@ -1,0 +1,21 @@
+id: 3eeadb37-7585-42e5-800f-c4517a4bb713
+name: Access to Azure SQL Database firewall
+description: |
+  'This query will detect access to Azure SQL Database firewall.'
+requiredDataConnectors:
+  - connectorId: AzureSql
+    dataTypes:
+      - AzureDiagnostics
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1562
+tags:
+  - SQL
+query: |
+  let timePeriod = 7d;
+  AzureDiagnostics 
+  | where TimeGenerated > ago(timePeriod)
+  | where Category == 'SQLSecurityAuditEvents'
+  | where (statement_s has "sys" and statement_s has "database_firewall_rules") or (statement_s has_any ('sp_set_firewall_rule', 'sp_set_database_firewall_rule', 'sp_delete_database_firewall_rule', 'sp_delete_firewall_rule'))
+  | extend Timestamp = TimeGenerated, ResourceId, ServerInstanceName = server_instance_name_s, DatabaseName = database_name_s, IPCustomEntity = client_ip_s
